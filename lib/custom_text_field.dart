@@ -24,6 +24,7 @@ class CustomTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
   final AutovalidateMode autovalidateMode;
+  final int? maxLength; // ✅ added maxLength
 
   const CustomTextField({
     super.key,
@@ -44,6 +45,7 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.autovalidateMode = AutovalidateMode.disabled,
+    this.maxLength, // ✅ initialize maxLength
   });
 
   @override
@@ -84,6 +86,7 @@ class CustomTextField extends StatelessWidget {
           : InputBorder.none,
       border: style == TextFieldStyle.outlined ? outlined : InputBorder.none,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      counterText: '', // hide default counter if you want
     );
 
     return TextFormField(
@@ -96,6 +99,7 @@ class CustomTextField extends StatelessWidget {
       readOnly: readonly,
       validator: validator,
       autovalidateMode: autovalidateMode,
+      maxLength: maxLength, // ✅ apply maxLength
     );
   }
 }
