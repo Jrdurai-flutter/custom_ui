@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final TextFieldStyle style;
   final bool obscureText;
+  final bool readonly;
   final Color? fillColor;
   final double borderRadius;
   final Widget? prefixIcon;
@@ -21,6 +22,8 @@ class CustomTextField extends StatelessWidget {
   final String? helperText;
   final String? errorText;
   final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
+  final AutovalidateMode autovalidateMode;
 
   const CustomTextField({
     super.key,
@@ -29,6 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.style = TextFieldStyle.outlined,
     this.obscureText = false,
+    this.readonly = false,
     this.fillColor,
     this.borderRadius = 12,
     this.prefixIcon,
@@ -38,7 +42,10 @@ class CustomTextField extends StatelessWidget {
     this.helperText,
     this.errorText,
     this.onChanged,
+    this.validator,
+    this.autovalidateMode = AutovalidateMode.disabled,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -46,12 +53,12 @@ class CustomTextField extends StatelessWidget {
 
     final OutlineInputBorder outlined = OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide(color: primary.withOpacity(0.6)), // 👈 enabled
+      borderSide: BorderSide(color: primary.withOpacity(0.6)),
     );
 
     final OutlineInputBorder focused = OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide(color: primary, width: 2), // 👈 focused
+      borderSide: BorderSide(color: primary, width: 2),
     );
 
     final InputDecoration decoration = InputDecoration(
@@ -79,16 +86,16 @@ class CustomTextField extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
 
-    return TextField(
+    return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: obscureText ? 1 : maxLines,
       onChanged: onChanged,
       decoration: decoration,
+      readOnly: readonly,
+      validator: validator,
+      autovalidateMode: autovalidateMode,
     );
   }
-
 }
-
-
