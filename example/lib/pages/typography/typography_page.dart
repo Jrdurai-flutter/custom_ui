@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:custom_ui/custom_ui.dart';
 
 import '../../widgets/widget_compents.dart';
+import 'components/masked/masked_text_demo.dart';
 import 'components/typography_components.dart';
 
 class TypographyShowcasePage extends StatelessWidget {
@@ -16,6 +17,7 @@ class TypographyShowcasePage extends StatelessWidget {
       TypographyWeightsDemo(onShowCode: onShowCode),
       TypographyColorsDemo(onShowCode: onShowCode),
       TypographyOverflowDemo(onShowCode: onShowCode),
+      MaskedTextDemo(onShowCode: onShowCode),
     ]);
   }
 }

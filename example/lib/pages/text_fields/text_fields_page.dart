@@ -34,6 +34,16 @@ class TextFieldsPage extends StatelessWidget {
   SizedBox(),
   ParagraphOutlinedTextFieldDemo(onShowCode: onShowCode),
   ParagraphFilledTextFieldDemo(onShowCode: onShowCode),
+    SizedBox(),
+    OutlinedOTPTextFieldDemo(onShowCode: onShowCode),
+
+    FilledOTPTextFieldDemo(onShowCode: onShowCode),
+
+    UnderlinedOTPTextFieldDemo(onShowCode: onShowCode),
+
+    BoxedOTPTextFieldDemo(onShowCode: onShowCode),
+
+    RoundedOTPTextFieldDemo(onShowCode: onShowCode),
 
   ],
   ),
