@@ -47,12 +47,12 @@ CustomCard(
                     children: [
                       Text(
                         'This is a custom card',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8.0),
                       Text(
                         'This is some sample text within the custom card. You can add any widget you like here.',
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),

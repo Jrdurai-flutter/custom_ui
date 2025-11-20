@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       "Components",
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   )
                 : null,
@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           _selectedComponent,
                           style: Theme.of(context)
                               .textTheme
-                              .headline4
+                              .headlineMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -195,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(height: 8),
                         Text(
                           _componentDescriptions[_selectedComponent] ?? "",
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 24),
                         Expanded(

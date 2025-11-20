@@ -23,7 +23,7 @@ class CustomOtpInputField extends StatefulWidget {
     this.length = 4,
     this.style = OtpFieldStyle.outlined,
     this.onCompleted,
-    this.fieldSize = 48,
+    this.fieldSize = 60,
     this.borderRadius = 8,
     this.fillColor,
     this.textStyle,
@@ -46,35 +46,49 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
 
   @override
   void dispose() {
-    for (final c in _controllers) {
-      c.dispose();
-    }
-    for (final f in _focusNodes) {
-      f.dispose();
-    }
+    for (final c in _controllers) c.dispose();
+    for (final f in _focusNodes) f.dispose();
     super.dispose();
   }
 
+  // 🚀 Smooth OTP typing logic
   void _onChanged(String value, int index) {
-    // Move forward
-    if (value.isNotEmpty && index < widget.length - 1) {
-      _focusNodes[index + 1].requestFocus();
+    if (value.isNotEmpty) {
+      // If last field → close keyboard
+      if (index == widget.length - 1) {
+        FocusScope.of(context).unfocus();
+      } else {
+        FocusScope.of(context).nextFocus();
+      }
     }
 
-    // Move backward
+    // If delete → go previous
     if (value.isEmpty && index > 0) {
-      _focusNodes[index - 1].requestFocus();
+      FocusScope.of(context).previousFocus();
     }
 
-    // Combine OTP digits
-    final otp = _controllers.map((c) => c.text).join();
+    // 🔥 Paste full OTP support
+    if (value.length > 1) {
+      final pasted = value.split('');
+      for (int i = 0; i < pasted.length && i < widget.length; i++) {
+        _controllers[i].text = pasted[i];
+      }
 
-    if (otp.length == widget.length && !otp.contains('')) {
-      FocusScope.of(context).unfocus();
+      if (pasted.length == widget.length) {
+        FocusScope.of(context).unfocus();
+        widget.onCompleted?.call(pasted.join());
+      }
+      return;
+    }
+
+    // Combine OTP
+    final otp = _controllers.map((c) => c.text).join();
+    if (otp.length == widget.length) {
       widget.onCompleted?.call(otp);
     }
   }
 
+  // 🎨 Border Themes
   InputDecoration _buildDecoration(BuildContext context, bool isFocused) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
@@ -99,7 +113,6 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
         return InputDecoration(
           counterText: '',
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
-          filled: false,
           enabledBorder: outlined,
           focusedBorder: outlined,
         );
@@ -109,10 +122,9 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
           counterText: '',
           filled: true,
           fillColor: fillColor,
-          enabledBorder:
-          outlined.copyWith(borderSide: BorderSide.none), // soft filled
-          focusedBorder: outlined.copyWith(
-              borderSide: BorderSide(color: primary, width: 2)),
+          enabledBorder: outlined.copyWith(borderSide: BorderSide.none),
+          focusedBorder:
+          outlined.copyWith(borderSide: BorderSide(color: primary, width: 2)),
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
         );
 
@@ -120,8 +132,8 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
         return InputDecoration(
           counterText: '',
           enabledBorder: underline,
-          focusedBorder: underline.copyWith(
-              borderSide: BorderSide(color: primary, width: 2)),
+          focusedBorder:
+          underline.copyWith(borderSide: BorderSide(color: primary, width: 2)),
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
         );
 
@@ -130,10 +142,10 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
           counterText: '',
           filled: true,
           fillColor: fillColor,
-          enabledBorder: outlined.copyWith(
-              borderSide: BorderSide(color: borderColor, width: 1.5)),
-          focusedBorder: outlined.copyWith(
-              borderSide: BorderSide(color: primary, width: 2)),
+          enabledBorder:
+          outlined.copyWith(borderSide: BorderSide(color: borderColor, width: 1.5)),
+          focusedBorder:
+          outlined.copyWith(borderSide: BorderSide(color: primary, width: 2)),
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
         );
 
@@ -142,7 +154,6 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
         return const InputDecoration(
           counterText: '',
           border: InputBorder.none,
-          enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 14),
         );
@@ -154,33 +165,38 @@ class _CustomOtpInputFieldState extends State<CustomOtpInputField> {
     final theme = Theme.of(context);
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(widget.length, (index) {
-        final node = _focusNodes[index];
-
-        return SizedBox(
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 2,horizontal: 4),
+          alignment: Alignment.center,
           width: widget.fieldSize,
-          child: Focus(
-            focusNode: node,
-            child: Builder(
-              builder: (context) {
-                final isFocused = Focus.of(context).hasFocus;
-                return TextField(
-                  controller: _controllers[index],
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  maxLength: 1,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  style: widget.textStyle ??
-                      theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                  decoration: _buildDecoration(context, isFocused),
-                  onChanged: (value) => _onChanged(value, index),
-                );
-              },
-            ),
+          child: TextField(
+            controller: _controllers[index],
+            focusNode: _focusNodes[index],
+            autofocus: index == 0,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            maxLength: 1,
+            showCursor: true,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            style: widget.textStyle ??
+                theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+            decoration: _buildDecoration(
+                context, _focusNodes[index].hasFocus),
+            onChanged: (value) => _onChanged(value, index),
+
+            // Prevent keyboard closing & smooth tap
+            onTap: () {
+              if (_controllers[index].text.isNotEmpty) {
+                _controllers[index].clear();
+              }
+            },
           ),
         );
       }),

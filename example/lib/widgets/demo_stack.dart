@@ -1,3 +1,4 @@
+import 'package:custom_ui/custom_card.dart';
 import 'package:flutter/material.dart';
 
 class DemoStack extends StatelessWidget {
@@ -13,27 +14,28 @@ class DemoStack extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return  Stack(
-      children: [
-        Center(child: child),
-        Positioned(
-          top: 4,
-          right: 4,
-          child:
+    return  CustomCard(
+        child:Padding(padding: EdgeInsets.all(8),child: Stack(
+          children: [
+            Center(child: child),
+            Positioned(
+              top: 4,
+              right: 4,
+              child:
 
-          IconButton(
-            tooltip: "Show code",
-            icon: const Icon(Icons.code),
-            onPressed: () => onShowCode(snippet),
-          ),
-        ),
-        Positioned(
-          left: 8,
-          bottom: 6,
-          child: Text(label ??'', style: const TextStyle(fontSize: 12, color: Colors.black54)),
-        ),
-      ],
-    );
+              IconButton(
+                tooltip: "Show code",
+                icon: const Icon(Icons.code),
+                onPressed: () => onShowCode(snippet),
+              ),
+            ),
+            Positioned(
+              left: 8,
+              bottom: 6,
+              child: Text(label ??'', style: const TextStyle(fontSize: 12, color: Colors.black54)),
+            ),
+          ],
+        ),));
   }
 }
 
