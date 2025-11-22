@@ -9,6 +9,7 @@ enum TextFieldStyle {
 class CustomTextField extends StatelessWidget {
   final String? label;
   final String? hint;
+  final Color? hintTextColor;
   final TextEditingController? controller;
   final TextFieldStyle style;
   final bool obscureText;
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     this.label,
     this.hint,
+    this.hintTextColor,
     this.controller,
     this.style = TextFieldStyle.outlined,
     this.obscureText = false,
@@ -66,6 +68,7 @@ class CustomTextField extends StatelessWidget {
     final InputDecoration decoration = InputDecoration(
       labelText: label,
       hintText: hint,
+      hintStyle: TextStyle(color: hintTextColor ?? theme.hintColor.withOpacity(0.6), ),
       prefixIcon: prefixIcon,
       suffixIcon: suffixIcon,
       helperText: helperText,
